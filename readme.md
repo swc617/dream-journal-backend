@@ -39,22 +39,21 @@ Secondary Indexes<br>
 
 ## 라우트
 journals
-└──addEntry -- POST 일지
-   deleteEntry -- DELETE 일지
-   getEntries -- GET 모든 일지
-   getEntry -- GET 일지
-   getTypes -- GET 타입별 일지; (ls1) 사용
+└──addEntry -- POST 일지<br>
+   deleteEntry -- DELETE 일지<br>
+   getEntries -- GET 모든 일지<br>
+   getEntry -- GET 일지<br>
+   getTypes -- GET 타입별 일지; (ls1) 사용<br>
    updateEntry -- PATCH 일지<br>
 
 newsfeed
-└──getNewsfeed -- GET 모든 사용자 일지; (gs1, gs2) 사용
+└──getNewsfeed -- GET 모든 사용자 일지; (gs1, gs2) 사용<br>
    updateReaction -- PATCH 댓글, 좋아요<br>
 
 user
-└──addProfile -- POST 프로필
-   deleteProfile -- DELETE 프로필
-   getProfile -- GET 프로필
-   getUsernames -- GET 모든 아이디; 아이디 중복 확인용
-   updateProfile -- PATCH 프로필
-   updateUsernames -- PATCH 아이디 set에 추가; 아이디 중복 확인용
-│
+└──addProfile -- POST 프로필<br>
+   deleteProfile -- DELETE 프로필<br>
+   getProfile -- GET 프로필<br>
+   getUsernames -- GET 모든 아이디; 아이디 중복 확인용<br>
+   updateProfile -- PATCH 프로필<br>
+   updateUsernames -- PATCH 아이디 set에 추가; 아이디 중복 확인용<br>
