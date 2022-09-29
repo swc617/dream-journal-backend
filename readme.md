@@ -40,6 +40,7 @@ Secondary Indexes<br>
 
 
 ## 라우트
+<pre>
 journals<br>
 └──addEntry -- POST 일지<br>
    deleteEntry -- DELETE 일지<br>
@@ -59,3 +60,4 @@ user<br>
    getUsernames -- GET 모든 아이디; 아이디 중복 확인용<br>
    updateProfile -- PATCH 프로필<br>
    updateUsernames -- PATCH 아이디 set에 추가; 아이디 중복 확인용<br>
+</pre>
