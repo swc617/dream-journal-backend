@@ -1,0 +1,19 @@
+version: 0.2
+run-as: root
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+    commands:
+      - npm install -g serverless
+  pre_build:
+    commands:
+      - npm install
+  build:
+    commands:
+      - serverless deploy -v -s $ENV_NAME
+
+cache:
+  path:
+    - node_modules

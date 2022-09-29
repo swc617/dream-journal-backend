@@ -1,0 +1,254 @@
+service: dream-journal
+frameworkVersion: '3'
+
+plugins:
+  - serverless-offline
+
+custom:
+  allowedHeaders:
+    - Accept
+    - Content-Type
+    - Content-Length
+    - app_user_id
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: production
+  region: us-west-2
+  endpointType: regional
+  environment:
+    JOURNALS_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.JOURNALS_TABLE}'
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.JOURNALS_TABLE}/index/*'
+
+functions:
+  #  journal functions
+  addEntry:
+    handler: journals/addEntry.handler
+    description: POST /journal
+    events:
+      - http:
+          path: journal
+          method: post
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  updateEntry:
+    handler: journals/updateEntry.handler
+    description: PATCH /journal/{sk}
+    events:
+      - http:
+          path: journal/{sk}
+          method: patch
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  getEntries:
+    handler: journals/getEntries.handler
+    description: GET /journals
+    events:
+      - http:
+          path: journals
+          method: get
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  getEntry:
+    handler: journals/getEntry.handler
+    description: GET /journal/{sk}
+    events:
+      - http:
+          path: journal/{sk}
+          method: get
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  getTypes:
+    handler: journals/getTypes.handler
+    description: GET /types
+    events:
+      - http:
+          path: types
+          method: get
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  deleteEntry:
+    handler: journals/deleteEntry.handler
+    description: DELETE /journal/{sk}
+    events:
+      - http:
+          path: journal/{sk}
+          method: delete
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  # newsfeed functions
+  getNewsfeed:
+    handler: newsfeed/getNewsfeed.handler
+    description: GET /newsfeed
+    events:
+      - http:
+          path: newsfeed
+          method: get
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  updateReaction:
+    handler: newsfeed/updateReaction.handler
+    description: PATCH /newsfeed/{sk}
+    events:
+      - http:
+          path: newsfeed/{sk}
+          method: patch
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  # user profile functions
+  addProfile:
+    handler: user/addProfile.handler
+    description: POST /user
+    events:
+      - http:
+          path: user
+          method: post
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  deleteProfile:
+    handler: user/deleteProfile.handler
+    description: PATCH /user
+    events:
+      - http:
+          path: user
+          method: delete
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  getProfile:
+    handler: user/getProfile.handler
+    description: GET /user
+    events:
+      - http:
+          path: user
+          method: get
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  updateProfile:
+    handler: user/updateProfile.handler
+    description: PATCH /user
+    events:
+      - http:
+          path: user
+          method: patch
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  # validate username
+  getUsernames:
+    handler: user/getUsernames.handler
+    description: GET /usernames
+    events:
+      - http:
+          path: usernames
+          method: get
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  updateUsernames:
+    handler: user/updateUsernames.handler
+    description: PATCH /usernames
+    events:
+      - http:
+          path: usernames
+          method: patch
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+resources:
+  Resources:
+    JournalsTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:provider.environment.JOURNALS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+          - AttributeName: share
+            AttributeType: S
+          - AttributeName: votes
+            AttributeType: N
+          - AttributeName: type
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: gs1
+            KeySchema:
+              - AttributeName: share
+                KeyType: HASH
+              - AttributeName: votes
+                KeyType: RANGE
+            Projection:
+              NonKeyAttributes:
+                - content
+              ProjectionType: INCLUDE
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+          - IndexName: gs2
+            KeySchema:
+              - AttributeName: share
+                KeyType: HASH
+              - AttributeName: sk
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+        LocalSecondaryIndexes:
+          - IndexName: ls1
+            KeySchema:
+              - AttributeName: pk
+                KeyType: HASH
+              - AttributeName: type
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
