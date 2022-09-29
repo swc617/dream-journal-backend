@@ -18,7 +18,7 @@ sls deploy
 
 
 ## 데이터베이스 구조
-싱글 테이블 디자인 - [스키마](https://docs.google.com/spreadsheets/d/1EIfkwCDx7B179JQYg06WFV6aem76h1bnVptbW779h7w/edit?usp=sharing)
+싱글 테이블 디자인 - [스키마](https://docs.google.com/spreadsheets/d/1EIfkwCDx7B179JQYg06WFV6aem76h1bnVptbW779h7w/edit?usp=sharing)<br>
 Primary Key<br>
 * pk - partition key
 * sk - sorting key
