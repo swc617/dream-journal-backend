@@ -49,7 +49,7 @@ Secondary Indexes<br>
 * share - 공유 여부
 * journal_id - 일기식별번호
 * votes - 좋아요수
-* liked_by - 좋아요 누른 사용자 
+* liked_by - 좋아요 누른 사용자 목록
 * comments - 댓글
 
 
