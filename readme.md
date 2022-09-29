@@ -15,6 +15,8 @@ npm install
 git push
 sls deploy
 ```
+
+
 ## 데이터베이스 구조
 싱글 테이블 디자인 - [스키마](https://docs.google.com/spreadsheets/d/1EIfkwCDx7B179JQYg06WFV6aem76h1bnVptbW779h7w/edit?usp=sharing)
 Primary Key<br>
@@ -38,19 +40,19 @@ Secondary Indexes<br>
 
 
 ## 라우트
-journals
+journals<br>
 └──addEntry -- POST 일지<br>
    deleteEntry -- DELETE 일지<br>
    getEntries -- GET 모든 일지<br>
    getEntry -- GET 일지<br>
    getTypes -- GET 타입별 일지; (ls1) 사용<br>
    updateEntry -- PATCH 일지<br>
-
-newsfeed
+<br>
+newsfeed<br>
 └──getNewsfeed -- GET 모든 사용자 일지; (gs1, gs2) 사용<br>
    updateReaction -- PATCH 댓글, 좋아요<br>
-
-user
+<br>
+user<br>
 └──addProfile -- POST 프로필<br>
    deleteProfile -- DELETE 프로필<br>
    getProfile -- GET 프로필<br>
