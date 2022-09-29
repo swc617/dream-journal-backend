@@ -37,6 +37,21 @@ Secondary Indexes<br>
   * share - hash
   * sk - range
 
+그 외 속성<br>
+* profile - 프로필
+* title - 제목
+* content - 내용
+* mood - 무드
+* vividness - 생생함
+* sleeptime - 수면시간
+* type - 꿈의 타입 (normal, 
+* theme - 사용자 지정 테마
+* share - 공유 여부
+* journal_id - 일기식별번호
+* votes - 좋아요수
+* liked_by - 좋아요 누른 사용자 
+* comments - 댓글
+
 
 ## 라우트
 <pre>
