@@ -24,17 +24,16 @@ Primary Key<br>
 * sk - sorting key
 
 Secondary Indexes<br>
-* ls1 - local secondary index
-  사용자의 일지를 꿈의 타입에 따라 호출
+* ls1 - local secondary index<br>
+  사용자의 일지를 꿈의 타입에 따라 호출<br>
   * pk - hash
   * type - range
-* gs1 - global secondary index
-  share 속성이 public인 일지를 좋아요에 따라 호출
+* gs1 - global secondary index<br>
+  share 속성이 public인 일지를 좋아요에 따라 호출<br>
   * share - hash
   * votes - range 
-  share가 public한 일지를 종
-* gs2 - global secondary index
-  share 속성이 public인 일지를 날짜에 따라 호출
+* gs2 - global secondary index<br>
+  share 속성이 public인 일지를 날짜에 따라 호출<br>
   * share - hash
   * sk - range
 
