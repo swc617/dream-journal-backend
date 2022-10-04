@@ -1,7 +1,6 @@
 /**
  * Route: GET /newsfeed
- *
- * if date isn't specified it will get current year month newsfeeds
+ * 뉴스피드 호출
  */
 
 const AWS = require('aws-sdk');
@@ -15,7 +14,9 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 exports.handler = async (event) => {
 	try {
 		let query = event.queryStringParameters;
+		// 날짜 또는 좋아요 수에 따라 정렬 하기 위한 변수
 		let sortBy = query && 'sortBy' in query ? query.sortBy : 'date';
+		// 최소 좋아요 설정 변수
 		let voteMin =
 			query && 'voteMinimum' in query ? parseInt(query.voteMinimum) : 0;
 		let currDate = new Date().toJSON().slice(0, 7).replace(/-/g, '');
@@ -35,7 +36,6 @@ exports.handler = async (event) => {
 					':public': 'PUBLIC',
 					':date': 'ENTRY#' + date,
 				},
-				// Limit: 20,
 			};
 		} else if (sortBy == 'votes') {
 			params = {
@@ -50,7 +50,6 @@ exports.handler = async (event) => {
 					':public': 'PUBLIC',
 					':v': voteMin,
 				},
-				// Limit: 20,
 			};
 		}
 
@@ -61,15 +60,15 @@ exports.handler = async (event) => {
 			headers: util.getResponseHeaders(),
 			body: JSON.stringify(data.Items),
 		};
-	} catch (err) {
-		console.log('Error', err);
-		return {
-			statusCode: err.statusCode ? err.statusCode : 500,
-			headers: util.getResponseHeaders(),
-			body: JSON.stringify({
-				error: err.name ? err.name : 'Exception',
-				message: err.message ? err.message : 'Unknown error',
-			}),
-		};
+	} catch (e) {
+        console.log('Error', e);
+        return {
+            statusCode: e.statusCode,
+            headers: util.getResponseHeaders(),
+            body: JSON.stringify({
+                error: e.name,
+                message: e.message,
+            }),
+        };
 	}
 };

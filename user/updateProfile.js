@@ -1,5 +1,6 @@
 /**
  * Route: PATCH /user
+ * 프로필 업데이트
  */
 
 const AWS = require('aws-sdk');
@@ -10,42 +11,42 @@ const util = require('../util.js');
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async (event) => {
-	try {
-		let item = JSON.parse(event.body).Item;
-		let user_id = util.getUserId(event.headers);
-		let params = {
-			TableName: process.env.JOURNALS_TABLE,
-			Key: {
-				pk: 'USER#' + user_id,
-				sk: 'PROFILE#' + user_id,
-			},
-			ExpressionAttributeNames: {
-				'#p': 'profile',
-			},
-			ExpressionAttributeValues: {
-				':profile': item.profile,
-			},
-			UpdateExpression: 'SET #p = :profile',
+    try {
+        let item = JSON.parse(event.body).Item;
+        let user_id = util.getUserId(event.headers);
+        let params = {
+            TableName: process.env.JOURNALS_TABLE,
+            Key: {
+                pk: 'USER#' + user_id,
+                sk: 'PROFILE#' + user_id,
+            },
+            ExpressionAttributeNames: {
+                '#p': 'profile',
+            },
+            ExpressionAttributeValues: {
+                ':profile': item.profile,
+            },
+            UpdateExpression: 'SET #p = :profile',
 
-			ReturnValues: 'ALL_NEW',
-		};
+            ReturnValues: 'ALL_NEW',
+        };
 
-		await dynamodb.update(params).promise();
+        await dynamodb.update(params).promise();
 
-		return {
-			statusCode: 200,
-			headers: util.getResponseHeaders(),
-			body: JSON.stringify(item),
-		};
-	} catch (err) {
-		console.log('Error', err);
-		return {
-			statusCode: err.statusCode ? err.statusCode : 500,
-			headers: util.getResponseHeaders(),
-			body: JSON.stringify({
-				error: err.name ? err.name : 'Exception',
-				message: err.message ? err.message : 'Unknown error',
-			}),
-		};
-	}
+        return {
+            statusCode: 200,
+            headers: util.getResponseHeaders(),
+            body: JSON.stringify(item),
+        };
+    } catch (e) {
+        console.log('Error', e);
+        return {
+            statusCode: e.statusCode,
+            headers: util.getResponseHeaders(),
+            body: JSON.stringify({
+                error: e.name,
+                message: e.message,
+            }),
+        };
+    }
 };
